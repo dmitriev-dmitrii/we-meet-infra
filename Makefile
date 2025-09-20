@@ -19,5 +19,5 @@ turn-test:  ## Test port availability
 	@nc -zv ${TURN_PUBLIC_IP} ${TURN_PORT_TLS} 2>/dev/null && echo "TURN/TLS:OK" || echo "TURN/TLS:FAIL"
 
 status:
-	@docker ps --filter "name=${APP_NAME}" --format "table {{.Names}}\t{{.Status}}"
+	@docker ps --filter "name=we-meet" --format "table {{.Names}}\t{{.Status}}"
 

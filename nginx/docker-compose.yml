@@ -2,7 +2,7 @@ services:
   we-meet-nginx:
     env_file: ../.env
     image: nginx:1.28
-    container_name: ${APP_NAME}-nginx
+    container_name: we-meet-nginx
     ports:
       - "80:80"
       - "443:443"

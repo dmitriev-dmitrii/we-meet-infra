@@ -2,7 +2,7 @@ services:
   we-meet-coturn:
     env_file: ../.env
     image: coturn/coturn:4.6.2
-    container_name: ${APP_NAME}-coturn
+    container_name: we-meet-coturn
     ports:
       - "${TURN_PORT_UDP}:${TURN_PORT_UDP}/udp"
       - "${TURN_PORT_TCP}:${TURN_PORT_TCP}/tcp"

@@ -9,6 +9,11 @@ services:
       file: coturn/docker-compose.yml
       service: we-meet-coturn
 
+  we-meet-backend:
+    extends:
+      file: backend/docker-compose.yml
+      service: we-meet-backend
+
 networks:
   we-meet-network:
     driver: bridge

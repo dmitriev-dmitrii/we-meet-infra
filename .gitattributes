@@ -1,2 +1,7 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+backend/ -diff -merge
+frontend/ -diff -merge
+backend/ export-ignore
+frontend/ export-ignore
+

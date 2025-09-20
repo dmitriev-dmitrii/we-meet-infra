@@ -1,7 +1,12 @@
 include .env
 
+copy-env:
+	cp -f .env frontend/.env
+	cp -f .env backend/.env
+
 up:
 	docker-compose up -d
+
 
 down:
 	docker-compose down

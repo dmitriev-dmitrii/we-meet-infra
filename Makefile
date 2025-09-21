@@ -1,5 +1,10 @@
 include .env
 
+update-all:
+    git pull
+    git submodule update --remote --recursive
+    @echo "All repositories updated"
+
 up:
 	@cp -f .env frontend/.env
 	@cp -f .env backend/.env

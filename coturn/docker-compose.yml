@@ -1,18 +1,37 @@
 services:
   we-meet-coturn:
-    env_file: ../.env
-    image: coturn/coturn:4.6.2
+    image: coturn/coturn:4.6.3
     container_name: we-meet-coturn
+    restart: unless-stopped
     ports:
-      - "${TURN_PORT_UDP}:${TURN_PORT_UDP}/udp"
-      - "${TURN_PORT_TCP}:${TURN_PORT_TCP}/tcp"
-      - "${TURN_PORT_TLS}:${TURN_PORT_TLS}/tcp"
+      # STUN/TURN
+      - "${TURN_PORT_UDP}:3478"
+      - "${TURN_PORT_UDP}:3478/udp"
+      # TLS-TURN
+      - "${TURN_PORT_TLS}:5349"
+      - "${TURN_PORT_TLS}:5349/udp"
+      # RTP/RTCP relays
       - "49152-49200:49152-49200/udp"
     environment:
-      - TURN_PUBLIC_IP=${TURN_PUBLIC_IP}
-      - TURN_USERNAME=${TURN_USERNAME}
-      - TURN_PASSWORD=${TURN_PASSWORD}
-      - TURN_REALM=${TURN_REALM}
+      # Автодетект IP (работает на VPS)
+      DETECT_EXTERNAL_IP: "true"
+      # Статический секрет для аутентификации
+      STATIC_AUTH_SECRET: "${TURN_STATIC_AUTH_SECRET}"
+      # Realm
+      REALM: "${TURN_REALM}"
     volumes:
-      - ./turnserver.conf:/etc/coturn/turnserver.conf
-    restart: always
+      # Конфиг файл
+      - "./coturn/turnserver.conf:/etc/coturn/turnserver.conf:ro"
+      # База данных и логи
+      - "coturn-data:/var/lib/coturn"
+      - "coturn-logs:/var/log"
+    networks:
+      - we-meet-network
+
+volumes:
+  coturn-data:
+  coturn-logs:
+
+networks:
+  we-meet-network:
+    external: true

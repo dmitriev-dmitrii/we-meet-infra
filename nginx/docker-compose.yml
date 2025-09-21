@@ -9,5 +9,10 @@ services:
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf
       - ./ssl:/etc/ssl/certs
+    networks:
+      - we-meet-network
     restart: unless-stopped
 
+networks:
+  we-meet-network:
+    external: true

@@ -5,14 +5,19 @@ copy-env:
 	cp -f .env backend/.env
 
 up:
-	docker-compose up -d
-
+	@docker network create we-meet-network 2>/dev/null || true
+	@cd nginx && docker-compose --env-file ../.env up -d
+	@cd coturn && docker-compose --env-file ../.env up -d
 
 down:
-	docker-compose down
+	@cd nginx && docker-compose --env-file ../.env down
+	@cd coturn && docker-compose --env-file ../.env down
+	@docker network rm we-meet-network 2>/dev/null || true
 
 clean:
-	docker-compose down -v --rmi local
+	@cd nginx && docker-compose --env-file ../.env down -v --rmi all
+	@cd coturn && docker-compose --env-file ../.env down -v --rmi all
+	@docker network rm we-meet-network 2>/dev/null || true
 
 turn-test:  ## Test port availability
 	@nc -zv ${TURN_PUBLIC_IP} ${TURN_PORT_TCP} 2>/dev/null && echo "TURN/TCP:OK" || echo "TURN/TCP:FAIL"

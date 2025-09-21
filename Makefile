@@ -4,20 +4,20 @@ up:
 	@cp -f .env frontend/.env
 	@cp -f .env backend/.env
 	@docker network create we-meet-network 2>/dev/null || true
-	@cd coturn && docker-compose --env-file ../.env up -d
-	@cd backend && docker-compose --env-file ../.env up -d
-	@cd nginx && docker-compose --env-file ../.env up -d
+	@cd coturn && docker compose --env-file ../.env up -d
+	@cd backend && docker compose --env-file ../.env up -d
+	@cd nginx && docker compose --env-file ../.env up -d
 
 down:
-	@cd coturn && docker-compose --env-file ../.env down
-	@cd backend && docker-compose --env-file ../.env down
-	@cd nginx && docker-compose --env-file ../.env down
+	@cd coturn && docker compose --env-file ../.env down
+	@cd backend && docker compose --env-file ../.env down
+	@cd nginx && docker compose --env-file ../.env down
 	@docker network rm we-meet-network 2>/dev/null || true
 
 clean:
-	@cd coturn && docker-compose --env-file ../.env down -v --rmi all
-	@cd backend && docker-compose --env-file ../.env down -v --rmi all
-	@cd nginx && docker-compose --env-file ../.env down -v --rmi all
+	@cd coturn && docker compose --env-file ../.env down -v --rmi all
+	@cd backend && docker compose --env-file ../.env down -v --rmi all
+	@cd nginx && docker compose --env-file ../.env down -v --rmi all
 	@docker network rm we-meet-network 2>/dev/null || true
 
 turn-test:  ## Test port availability

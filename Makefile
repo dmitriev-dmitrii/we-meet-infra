@@ -27,6 +27,9 @@ turn-test:  ## Test port availability
 status:
 	@docker ps --filter "name=we-meet" --format "table {{.Names}}\t{{.Status}}"
 
+reload-nginx:
+	@docker exec we-meet-nginx nginx -s reload
+
 help:
 	@echo "Available commands:"
 	@echo "  make up      - Start all services"
@@ -34,4 +37,5 @@ help:
 	@echo "  make clean   - Stop and remove all containers, volumes, images"
 	@echo "  make status  - Show running containers"
 	@echo "  make turn-test - Test TURN server connectivity"
+	@echo "  make reload-nginx - Reload nginx configuration"
 

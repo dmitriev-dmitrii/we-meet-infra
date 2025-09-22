@@ -25,12 +25,23 @@ status:
 reload-nginx:
 	@docker exec we-meet-nginx nginx -s reload
 
+ssl-links:
+	ln -sf /etc/letsencrypt/live/${DOMAIN}/fullchain.pem ./ssl/
+	ln -sf /etc/letsencrypt/live/${DOMAIN}/privkey.pem ./ssl/
+	echo "Симлинки созданы для ${DOMAIN}"
+
+ssl-clean:
+	rm -f ./ssl/fullchain.pem
+	rm -f ./ssl/privkey.pem
+	echo "Симлинки удалены"
+
 help:
 	@echo "Available commands:"
-	@echo "  make up      - Start all services"
-	@echo "  make down    - Stop all services"
-	@echo "  make clean   - Stop and remove all containers, volumes, images"
-	@echo "  make status  - Show running containers"
-	@echo "  make turn-test - Test TURN server connectivity"
+	@echo "  make up         - Start all services"
+	@echo "  make down       - Stop all services"
+	@echo "  make clean      - Stop and remove all containers, volumes, images"
+	@echo "  make status     - Show running containers"
+	@echo "  make turn-test  - Test TURN server connectivity"
 	@echo "  make reload-nginx - Reload nginx configuration"
-
+	@echo "  make ssl-links  - Create SSL symlinks"
+	@echo "  make ssl-clean  - Remove SSL symlinks"

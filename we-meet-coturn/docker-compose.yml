@@ -18,13 +18,14 @@ services:
       # Статический секрет для аутентификации
       STATIC_AUTH_SECRET: "${TURN_STATIC_AUTH_SECRET}"
       # Realm
-      REALM: "${TURN_REALM}"
+      REALM: "${DOMAIN}"
     volumes:
       # Конфиг файл
       - "./turnserver.conf:/etc/coturn/turnserver.conf:ro"
       # База данных и логи
       - "./coturn-data:/var/lib/coturn"
       - "./coturn-logs:/var/log"
+      - ../ssl:/etc/letsencrypt:ro
     networks:
       - we-meet-network
 

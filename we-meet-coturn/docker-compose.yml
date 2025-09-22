@@ -15,8 +15,8 @@ services:
     environment:
       # Автодетект IP (работает на VPS)
       DETECT_EXTERNAL_IP: "true"
-      # Статический секрет для аутентификации
-      STATIC_AUTH_SECRET: "${TURN_STATIC_AUTH_SECRET}"
+      # Статический секрет для аутентификации TODO
+#      STATIC_AUTH_SECRET: "${TURN_STATIC_AUTH_SECRET}"
       # Realm
       REALM: "${DOMAIN}"
     volumes:

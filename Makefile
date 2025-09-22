@@ -28,12 +28,12 @@ reload-nginx:
 ssl-links:
 	ln -sf /etc/letsencrypt/live/${DOMAIN}/fullchain.pem ./ssl/
 	ln -sf /etc/letsencrypt/live/${DOMAIN}/privkey.pem ./ssl/
-	echo "Симлинки созданы для ${DOMAIN}"
+	@echo "Симлинки созданы для ${DOMAIN}"
 
 ssl-clean:
 	rm -f ./ssl/fullchain.pem
 	rm -f ./ssl/privkey.pem
-	echo "Симлинки удалены"
+	@echo "Симлинки удалены"
 
 help:
 	@echo "Available commands:"

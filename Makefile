@@ -2,17 +2,17 @@ include .env
 
 up:
 	@docker network create we-meet-network 2>/dev/null || true
-	@cd coturn && docker compose --env-file ../.env up -d
-	@cd nginx && docker compose --env-file ../.env up -d
+	@cd we-meet-coturn && docker compose --env-file ../.env up -d
+	@cd we-meet-nginx && docker compose --env-file ../.env up -d
 
 down:
-	@cd coturn && docker compose --env-file ../.env down
-	@cd nginx && docker compose --env-file ../.env down
+	@cd we-meet-coturn && docker compose --env-file ../.env down
+	@cd we-meet-nginx && docker compose --env-file ../.env down
 	@docker network rm we-meet-network 2>/dev/null || true
 
 clean:
-	@cd coturn && docker compose --env-file ../.env down -v --rmi all
-	@cd nginx && docker compose --env-file ../.env down -v --rmi all
+	@cd we-meet-coturn && docker compose --env-file ../.env down -v --rmi all
+	@cd we-meet-nginx && docker compose --env-file ../.env down -v --rmi all
 	@docker network rm we-meet-network 2>/dev/null || true
 
 turn-test:  ## Test TURN server port availability

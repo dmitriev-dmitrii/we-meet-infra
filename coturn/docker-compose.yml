@@ -4,12 +4,12 @@ services:
     container_name: we-meet-coturn
     restart: unless-stopped
     ports:
-      # STUN/TURN
-      - "${TURN_PORT_UDP}:3478"
-      - "${TURN_PORT_UDP}:3478/udp"
-      # TLS-TURN
-      - "${TURN_PORT_TLS}:5349"
-      - "${TURN_PORT_TLS}:5349/udp"
+      # STUN/TURN (стандартные порты)
+      - "3478:3478"
+      - "3478:3478/udp"
+      # TLS-TURN (стандартный порт)
+      - "5349:5349"
+      - "5349:5349/udp"
       # RTP/RTCP relays
       - "49152-49200:49152-49200/udp"
     environment:

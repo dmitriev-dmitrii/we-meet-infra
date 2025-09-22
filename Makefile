@@ -1,9 +1,9 @@
 include .env
 
 update-all:
-    git pull
-    git submodule update --remote --recursive
-    @echo "All repositories updated"
+	git pull
+	git submodule update --remote --recursive
+	@echo "All repositories updated"
 
 up:
 	@cp -f .env frontend/.env
@@ -25,9 +25,9 @@ clean:
 	@cd nginx && docker compose --env-file ../.env down -v --rmi all
 	@docker network rm we-meet-network 2>/dev/null || true
 
-turn-test:  ## Test port availability
-	@nc -zv ${TURN_PUBLIC_IP} ${TURN_PORT_TCP} 2>/dev/null && echo "TURN/TCP:OK" || echo "TURN/TCP:FAIL"
-	@nc -zv ${TURN_PUBLIC_IP} ${TURN_PORT_TLS} 2>/dev/null && echo "TURN/TLS:OK" || echo "TURN/TLS:FAIL"
+turn-test:  ## Test TURN server port availability
+	@nc -zv ${TURN_PUBLIC_IP} 3478 2>/dev/null && echo "TURN/TCP:OK" || echo "TURN/TCP:FAIL"
+	@nc -zv ${TURN_PUBLIC_IP} 5349 2>/dev/null && echo "TURN/TLS:OK" || echo "TURN/TLS:FAIL"
 
 status:
 	@docker ps --filter "name=we-meet" --format "table {{.Names}}\t{{.Status}}"

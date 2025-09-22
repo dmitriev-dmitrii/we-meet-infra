@@ -21,10 +21,10 @@ services:
       REALM: "${TURN_REALM}"
     volumes:
       # Конфиг файл
-      - "./coturn/turnserver.conf:/etc/coturn/turnserver.conf:ro"
+      - "./turnserver.conf:/etc/coturn/turnserver.conf:ro"
       # База данных и логи
-      - "coturn-data:/var/lib/coturn"
-      - "coturn-logs:/var/log"
+      - "./coturn-data:/var/lib/coturn"
+      - "./coturn-logs:/var/log"
     networks:
       - we-meet-network
 

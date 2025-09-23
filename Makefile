@@ -2,18 +2,17 @@ include .env
 
 up:
 	@docker network create we-meet-network 2>/dev/null || true
+	@cd we-meet-traefik && docker compose --env-file ../.env up -d
 	@cd we-meet-coturn && docker compose --env-file ../.env up -d
-	@cd we-meet-nginx && docker compose --env-file ../.env up -d
 
 down:
-	@cd we-meet-coturn && docker compose --env-file ../.env down
-	@cd we-meet-nginx && docker compose --env-file ../.env down
-	@docker network rm we-meet-network 2>/dev/null || true
+	@cd we-meet-traefik && docker compose --env-file ../.env down || true
+	@cd we-meet-coturn && docker compose --env-file ../.env down || true
+
 
 clean:
-	@cd we-meet-coturn && docker compose --env-file ../.env down -v --rmi all
-	@cd we-meet-nginx && docker compose --env-file ../.env down -v --rmi all
-	@docker network rm we-meet-network 2>/dev/null || true
+	@cd we-meet-traefik && docker compose --env-file ../.env down -v --rmi all || true
+	@cd we-meet-coturn && docker compose --env-file ../.env down -v --rmi all || true
 
 turn-test:  ## Test TURN server port availability
 	@nc -zv ${TURN_PUBLIC_IP} 3478 2>/dev/null && echo "TURN/TCP:OK" || echo "TURN/TCP:FAIL"
@@ -22,18 +21,10 @@ turn-test:  ## Test TURN server port availability
 status:
 	@docker ps --filter "name=we-meet" --format "table {{.Names}}\t{{.Status}}"
 
-reload-nginx:
-	@docker exec we-meet-nginx nginx -s reload
+# nginx больше не используется
 
-ssl-links:
-	ln -sf /etc/letsencrypt/live/${DOMAIN}/fullchain.pem ./ssl/
-	ln -sf /etc/letsencrypt/live/${DOMAIN}/privkey.pem ./ssl/
-	@echo "Симлинки созданы для ${DOMAIN}"
-
-ssl-clean:
-	rm -f ./ssl/fullchain.pem
-	rm -f ./ssl/privkey.pem
-	@echo "Симлинки удалены"
+traefik-logs:
+	@docker logs -f we-meet-traefik | cat
 
 help:
 	@echo "Available commands:"
@@ -42,6 +33,5 @@ help:
 	@echo "  make clean      - Stop and remove all containers, volumes, images"
 	@echo "  make status     - Show running containers"
 	@echo "  make turn-test  - Test TURN server connectivity"
-	@echo "  make reload-nginx - Reload nginx configuration"
-	@echo "  make ssl-links  - Create SSL symlinks"
-	@echo "  make ssl-clean  - Remove SSL symlinks"
+	@echo "  make traefik-logs - Tail Traefik logs"
+	@echo "  make add-traefik-user - Add/replace Traefik dashboard user"

@@ -1,0 +1,77 @@
+# Точки входа (порты, на которых слушает Traefik)
+entryPoints:
+  web:
+    address: ":80"
+  websecure:
+    address: ":443"
+
+# Провайдеры конфигурации (откуда Traefik читает настройки)
+providers:
+  docker:
+    exposedByDefault: false # не публиковать контейнеры без явной конфигурации
+  file:
+    filename: /etc/traefik/traefik.yml # используем этот же файл как динамический
+    watch: true # перезагружать при изменении
+
+# Let's Encrypt (ACME) для HTTPS на VPS (нужен SSL_EMAIL в .env)
+certificatesResolvers:
+  letsencrypt:
+    acme:
+      email: "${SSL_EMAIL}"
+      storage: /etc/letsencrypt/acme.json
+      httpChallenge:
+        entryPoint: web
+
+# Логи Traefik
+log:
+  level: INFO
+
+# Логи доступа (запросы)
+accessLog: {}
+
+# Панель Traefik. Включена, но НЕ публикуется напрямую (проксируем ниже как service api@internal)
+api:
+  dashboard: true
+
+# Динамическая конфигурация (роутеры/сервисы) — проксируем только backend
+http:
+  routers:
+    # Dashboard для локальной разработки (HTTP)
+    traefik-dashboard:
+      entryPoints: [web]
+      rule: PathPrefix(`/dashboard`)
+      middlewares: [traefik-auth]
+      service: api@internal
+
+    # Dashboard для продакшена (HTTPS)
+    traefik-websecure:
+      entryPoints: [websecure]
+      rule: PathPrefix(`/dashboard`)
+      tls:
+        certResolver: letsencrypt
+      middlewares: [traefik-auth]
+      service: api@internal
+
+    backend-web:
+      entryPoints: [web] # HTTP (локальная разработка)
+      rule: PathPrefix(`/api`) || PathPrefix(`/ws`)
+      service: we-meet-backend
+
+    backend-websecure:
+      entryPoints: [websecure] # HTTPS (VPS)
+      rule: PathPrefix(`/api`) || PathPrefix(`/ws`)
+      tls:
+        certResolver: letsencrypt
+      service: we-meet-backend
+
+  services:
+    we-meet-backend:
+      loadBalancer:
+        servers:
+          - url: http://we-meet-backend:${BACKEND_APP_PORT}
+        passHostHeader: true
+
+  middlewares:
+    traefik-auth:
+      basicAuth:
+        usersFile: /etc/traefik/usersfile

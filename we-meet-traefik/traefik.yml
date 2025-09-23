@@ -54,12 +54,12 @@ http:
 
     backend-web:
       entryPoints: [web] # HTTP (локальная разработка)
-      rule: PathPrefix(`/api`) || PathPrefix(`/ws`)
+      rule: PathPrefix(`/api`)
       service: we-meet-backend
 
     backend-websecure:
       entryPoints: [websecure] # HTTPS (VPS)
-      rule: PathPrefix(`/api`) || PathPrefix(`/ws`)
+      rule: PathPrefix(`/api`)
       tls:
         certResolver: letsencrypt
       service: we-meet-backend

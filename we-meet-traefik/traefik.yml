@@ -36,6 +36,14 @@ api:
 # Динамическая конфигурация (роутеры/сервисы) — проксируем только backend
 http:
   routers:
+    # 🔴 ВАЖНО: Этот роутер должен быть ПЕРВЫМ! 🔴
+    # Let's Encrypt ACME Challenge (для получения SSL сертификата)
+    acme-challenge:
+      entryPoints: [web]
+      rule: PathPrefix(`/.well-known/acme-challenge/`)
+      service: noop@internal  # специальный сервис для Traefik
+      priority: 1000  # высокий приоритет
+
     # Dashboard для локальной разработки (HTTP)
     traefik-dashboard:
       entryPoints: [web]

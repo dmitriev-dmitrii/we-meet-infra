@@ -68,7 +68,7 @@ http:
     we-meet-backend:
       loadBalancer:
         servers:
-          - url: http://we-meet-backend:${BACKEND_APP_PORT}
+          - url: http://we-meet-backend:3000
         passHostHeader: true
 
   middlewares:

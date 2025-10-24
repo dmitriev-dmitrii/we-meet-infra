@@ -1,22 +1,25 @@
+
 services:
-  traefik:
+  we-meet-traefik:
     env_file: ../.env
     image: traefik:3.1
     container_name: we-meet-traefik
     restart: unless-stopped
     ports:
       - "80:80"
+      - "8080:8080"
       - "443:443"
+    environment:
+      - EMAIL=${EMAIL}
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
-      - ./traefik.yml:/etc/traefik/traefik.yml:ro
-      - ../ssl:/etc/letsencrypt
-      - ./usersfile:/etc/traefik/usersfile:ro
+      - ./traefik.yml:/etc/traefik/traefik.yml
+      - ./acme.json:/etc/traefik/acme.json
+      - ./usersfile:/etc/traefik/usersfile
+      - ../ssl:/etc/traefik/ssl
     networks:
       - we-meet-network
 
 networks:
   we-meet-network:
     external: true
-
-

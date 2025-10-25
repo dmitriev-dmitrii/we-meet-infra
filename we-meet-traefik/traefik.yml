@@ -19,7 +19,7 @@
         tlsChallenge: {}
 
   log:
-    level: INFO
+    level: DEBUG
 
   http:
     routers:

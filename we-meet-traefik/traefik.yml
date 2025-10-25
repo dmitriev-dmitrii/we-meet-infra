@@ -30,13 +30,29 @@
           options: {}
           certResolver: leResolver
 
+      we-meet-frontend-https:
+        rule: "Host(`${DOMAIN}`) && PathPrefix(`/`)"
+        service: we-meet-frontend
+        tls:
+          options: {}
+          certResolver: leResolver
+
       we-meet-backend-http:
         rule: "PathPrefix(`/api`)"
         service: we-meet-backend
+
+      we-meet-frontend-http:
+        rule: "PathPrefix(`/`)"
+        service: we-meet-frontend
 
     services:
       we-meet-backend:
         loadBalancer:
           servers:
             - url: "http://we-meet-backend:3000"
+          passHostHeader: true
+      we-meet-frontend:
+        loadBalancer:
+          servers:
+            - url: "http://we-meet-frontend:3003"
           passHostHeader: true

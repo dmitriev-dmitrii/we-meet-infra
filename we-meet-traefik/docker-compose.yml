@@ -7,16 +7,14 @@ services:
     restart: unless-stopped
     ports:
       - "80:80"
-      - "8080:8080"
       - "443:443"
     environment:
       - EMAIL=${EMAIL}
+      - DOMAIN=${DOMAIN}
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - ./traefik.yml:/etc/traefik/traefik.yml
-      - ./acme.json:/etc/traefik/acme.json
-      - ./usersfile:/etc/traefik/usersfile
-      - ../ssl:/etc/traefik/ssl
+      - ../ssl:/etc/traefik/acme/
     networks:
       - we-meet-network
 

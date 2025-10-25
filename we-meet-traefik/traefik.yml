@@ -1,79 +1,42 @@
-entryPoints:
-  web:
-    address: ":80"
-  websecure:
-    address: ":443"
+  entryPoints:
+    web:
+      address: ":80"
+    websecure:
+      address: ":443"
 
-serversTransport:
-  insecureSkipVerify: true
+  providers:
+    docker:
+      exposedByDefault: false
+    file:
+      filename: /etc/traefik/traefik.yml
+      watch: true
 
-providers:
-  docker:
-    exposedByDefault: false
-  file:
-    filename: /etc/traefik/traefik.yml
-    watch: true
+  certificatesResolvers:
+    leResolver:
+      acme:
+        email: ${EMAIL}
+        caServer: https://acme-v02.api.letsencrypt.org/directory
+        tlsChallenge: {}
 
-certificatesResolvers:
-  letsencrypt:
-    acme:
-      email: "${EMAIL}"
-      storage: /etc/traefik/acme.json
-      httpChallenge:
-        entryPoint: web
+  log:
+    level: INFO
 
-certificates:
-  - certFile: /etc/traefik/ssl/cert.pem
-    keyFile: /etc/traefik/ssl/private.key
-    stores:
-      - default
+  http:
+    routers:
+      we-meet-backend-https:
+        rule: "Host(`${DOMAIN}`) && PathPrefix(`/api`)"
+        service: we-meet-backend
+        tls:
+          options: {}
+          certResolver: leResolver
 
-log:
-  level: INFO
+      we-meet-backend-http:
+        rule: "PathPrefix(`/api`)"
+        service: we-meet-backend
 
-api:
-  dashboard: true
-
-http:
-  routers:
-    # Дашборд HTTP (редирект на HTTPS)
-    traefik-dashboard:
-      entryPoints: [web]
-      rule: PathPrefix(`/dashboard`)
-      middlewares: [traefik-auth]
-      service: api@internal
-
-    # Дашборд HTTPS
-    traefik-websecure:
-      entryPoints: [websecure]
-      rule: PathPrefix(`/dashboard`)
-      tls:
-        certResolver: letsencrypt
-      middlewares: [traefik-auth]
-      service: api@internal
-
-    # Бэкенд HTTP (редирект на HTTPS)
-    backend-web:
-      entryPoints: [web]
-      rule: PathPrefix(`/api`)
-      service: we-meet-backend
-
-    # Бэкенд HTTPS
-    backend-websecure:
-      entryPoints: [websecure]
-      rule: PathPrefix(`/api`)
-      tls:
-        certResolver: letsencrypt
-      service: we-meet-backend
-
-  services:
-    we-meet-backend:
-      loadBalancer:
-        servers:
-          - url: http://we-meet-backend:3000
-        passHostHeader: true
-
-  middlewares:
-    traefik-auth:
-      basicAuth:
-        usersFile: /etc/traefik/usersfile
+    services:
+      we-meet-backend:
+        loadBalancer:
+          servers:
+            - url: "http://we-meet-backend:3000"
+          passHostHeader: true

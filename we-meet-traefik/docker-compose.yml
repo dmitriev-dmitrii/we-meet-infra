@@ -8,10 +8,6 @@ services:
     ports:
       - "80:80"
       - "443:443"
-    command:
-      - "--certificatesresolvers.letsencrypt.acme.email=dmitriev.dmitrii.dev@yandex.ru"
-      - "--certificatesresolvers.letsencrypt.acme.storage=/etc/traefik/acme.json"
-      - "--certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=web"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - ./traefik.yml:/etc/traefik/traefik.yml

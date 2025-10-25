@@ -12,7 +12,17 @@
   providers:
     docker:
       exposedByDefault: false
+    file:
+      filename: /etc/traefik/traefik.yml
+      watch: true
 
+  certificatesResolvers:
+    letsencrypt:
+      acme:
+        email: "dmitriev.dmitrii.dev@yandex.ru"
+        storage: /etc/traefik/acme.json
+        httpChallenge:
+          entryPoint: web
   log:
     level: DEBUG
 

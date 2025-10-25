@@ -9,9 +9,6 @@ services:
       - "80:80"
       - "443:443"
     command:
-      - "--api.dashboard=false"
-      - "--providers.docker=true"
-      - "--providers.docker.exposedbydefault=false"
       - "--certificatesresolvers.letsencrypt.acme.email=dmitriev.dmitrii.dev@yandex.ru"
       - "--certificatesresolvers.letsencrypt.acme.storage=/etc/traefik/acme.json"
       - "--certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=web"

@@ -25,5 +25,4 @@ dist-ssr
 
 usersfile
 ssl
-
-.env
+we-meet-traefik/acme.json

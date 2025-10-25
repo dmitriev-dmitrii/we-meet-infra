@@ -12,9 +12,6 @@
   providers:
     docker:
       exposedByDefault: false
-    file:
-      filename: /etc/traefik/traefik.yml
-      watch: true
 
   log:
     level: DEBUG

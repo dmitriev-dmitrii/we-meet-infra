@@ -2,15 +2,19 @@
 services:
   we-meet-traefik:
     env_file: ../.env
-    image: traefik:3.1
+    image: traefik:3.5.3
     container_name: we-meet-traefik
     restart: unless-stopped
     ports:
       - "80:80"
       - "443:443"
-    environment:
-      - EMAIL=${EMAIL}
-      - DOMAIN=${DOMAIN}
+    command:
+      - "--api.dashboard=false"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--certificatesresolvers.letsencrypt.acme.email=${EMAIL}"
+      - "--certificatesresolvers.letsencrypt.acme.storage=/etc/traefik/acme.json"
+      - "--certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=web"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - ./traefik.yml:/etc/traefik/traefik.yml

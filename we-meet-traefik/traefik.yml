@@ -1,58 +1,40 @@
   entryPoints:
     web:
       address: ":80"
+      http:
+        redirections:
+          entryPoint:
+            to: websecure
+            scheme: https
     websecure:
       address: ":443"
-
-  providers:
-    docker:
-      exposedByDefault: false
-    file:
-      filename: /etc/traefik/traefik.yml
-      watch: true
-
-  certificatesResolvers:
-    leResolver:
-      acme:
-        email: ${EMAIL}
-        caServer: https://acme-v02.api.letsencrypt.org/directory
-        tlsChallenge: {}
 
   log:
     level: DEBUG
 
   http:
     routers:
-      we-meet-backend-https:
-        rule: "Host(`${DOMAIN}`) && PathPrefix(`/api`)"
-        service: we-meet-backend
-        tls:
-          options: {}
-          certResolver: leResolver
-
-      we-meet-frontend-https:
-        rule: "Host(`${DOMAIN}`) && PathPrefix(`/`)"
-        service: we-meet-frontend
-        tls:
-          options: {}
-          certResolver: leResolver
-
-      we-meet-backend-http:
+      we-meet-backend:
+        entryPoints: [websecure]
         rule: "PathPrefix(`/api`)"
         service: we-meet-backend
+        tls:
+          certResolver: letsencrypt
 
-      we-meet-frontend-http:
+      we-meet-frontend:
+        entryPoints: [websecure]
         rule: "PathPrefix(`/`)"
         service: we-meet-frontend
+        tls:
+          certResolver: letsencrypt
 
     services:
       we-meet-backend:
         loadBalancer:
           servers:
             - url: "http://we-meet-backend:3000"
-          passHostHeader: true
+
       we-meet-frontend:
         loadBalancer:
           servers:
             - url: "http://we-meet-frontend:3003"
-          passHostHeader: true

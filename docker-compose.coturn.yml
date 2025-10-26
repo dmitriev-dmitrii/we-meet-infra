@@ -1,29 +1,28 @@
 services:
   we-meet-coturn:
+    env_file: .env
     image: coturn/coturn:4.6.3
     container_name: we-meet-coturn
     restart: unless-stopped
     ports:
-      # STUN/TURN (стандартные порты)
       - "3478:3478"
       - "3478:3478/udp"
-      # TLS-TURN (стандартный порт)
       - "5349:5349"
       - "5349:5349/udp"
-      # RTP/RTCP relays
       - "49152-49200:49152-49200/udp"
     environment:
       # Автодетект IP (работает на VPS)
       DETECT_EXTERNAL_IP: "true"
-      # Статический секрет для аутентификации TODO
-#      STATIC_AUTH_SECRET: "${TURN_STATIC_AUTH_SECRET}"
+      STATIC_AUTH_SECRET: "${TURN_STATIC_AUTH_SECRET}"
+      REALM=: "${DOMAIN}"
     volumes:
-      - ./turnserver.conf:/etc/coturn/turnserver.conf:ro
-      - ./coturn-data:/var/lib/coturn
-      - ./coturn-logs:/var/log
-      - ../ssl:/etc/coturn/ssl:ro
+      - ./coturn/turnserver.conf:/etc/coturn/turnserver.conf:ro
+      - ./coturn/coturn-data:/var/lib/coturn
+      - ./coturn/coturn-logs:/var/log
+      - ./ssl:/etc/coturn/ssl:ro
     networks:
       - we-meet-network
+
 
 networks:
   we-meet-network:

@@ -1,7 +1,6 @@
-
 services:
   we-meet-traefik:
-    env_file: ../.env
+    env_file: .env
     image: traefik:3.5.3
     container_name: we-meet-traefik
     restart: unless-stopped
@@ -10,8 +9,8 @@ services:
       - "443:443"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
-      - ./traefik.yml:/etc/traefik/traefik.yml
-      - ../ssl:/etc/traefik/acme/
+      - ./traefik/traefik.yml:/etc/traefik/traefik.yml
+      - ./ssl:/etc/traefik/acme/
     networks:
       - we-meet-network
 

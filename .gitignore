@@ -25,4 +25,4 @@ dist-ssr
 
 usersfile
 ssl
-we-meet-traefik/acme.json
+traefik/acme.json

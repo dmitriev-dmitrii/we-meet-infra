@@ -13,8 +13,8 @@ services:
     environment:
       # Автодетект IP (работает на VPS)
       DETECT_EXTERNAL_IP: "true"
-      STATIC_AUTH_SECRET: "${TURN_STATIC_AUTH_SECRET}"
-      REALM=: "${DOMAIN}"
+#      STATIC_AUTH_SECRET: "${TURN_STATIC_AUTH_SECRET}"
+#      REALM: "${DOMAIN}"
     volumes:
       - ./coturn/turnserver.conf:/etc/coturn/turnserver.conf:ro
       - ./coturn/coturn-data:/var/lib/coturn
@@ -22,7 +22,6 @@ services:
       - ./ssl:/etc/coturn/ssl:ro
     networks:
       - we-meet-network
-
 
 networks:
   we-meet-network:

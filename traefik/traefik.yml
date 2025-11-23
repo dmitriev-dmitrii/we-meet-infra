@@ -16,6 +16,11 @@
       filename: /etc/traefik/traefik.yml
       watch: true
 
+  tls:
+    certificates:
+      - certFile: /etc/traefik/ssl/wildcard.crt
+        keyFile: /etc/traefik/ssl/wildcard.key
+
   log:
     level: DEBUG
 
@@ -25,15 +30,13 @@
         entryPoints: [websecure]
         rule: "PathPrefix(`/api`)"
         service: we-meet-backend
-        tls:
-          certResolver: letsencrypt
+        tls: {}
 
       we-meet-frontend:
         entryPoints: [websecure]
         rule: "PathPrefix(`/`)"
         service: we-meet-frontend
-        tls:
-          certResolver: letsencrypt
+        tls: {}
 
     services:
       we-meet-backend:

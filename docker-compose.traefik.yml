@@ -10,7 +10,8 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - ./traefik/traefik.yml:/etc/traefik/traefik.yml
-      - ./ssl:/etc/traefik/acme/
+      - ./traefik/acme.json:/etc/traefik/acme.json
+      - ./ssl:/etc/traefik/ssl:ro
     networks:
       - we-meet-network
 

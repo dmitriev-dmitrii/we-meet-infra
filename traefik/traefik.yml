@@ -22,12 +22,6 @@
       - certFile: /etc/traefik/ssl/wildcard.crt
         keyFile: /etc/traefik/ssl/wildcard.key
 
-    stores:
-      default:
-        defaultCertificate:
-          certFile: /etc/traefik/ssl/wildcard.crt
-          keyFile: /etc/traefik/ssl/wildcard.key
-
   log:
     level: DEBUG
 

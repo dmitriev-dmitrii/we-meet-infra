@@ -12,6 +12,7 @@
   providers:
     docker:
       exposedByDefault: false
+      network: we-meet-network
     file:
       filename: /etc/traefik/traefik.yml
       watch: true

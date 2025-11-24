@@ -13,7 +13,8 @@ services:
     environment:
       # Автодетект IP (работает на VPS)
       DETECT_EXTERNAL_IP: "true"
-#      STATIC_AUTH_SECRET: "${TURN_STATIC_AUTH_SECRET}"
+      TURN_USERNAME: "${TURN_USERNAME}"
+      TURN_PASSWORD: "${TURN_PASSWORD}"
 #      REALM: "${DOMAIN}"
     volumes:
       - ./coturn/turnserver.conf:/etc/coturn/turnserver.conf:ro
